@@ -40,11 +40,20 @@ Demonstrate your understanding of this week's concepts by answering the followin
 
 - [ ] Explain the difference between `Relational Databases` and `SQL`.
 
+  SQL is a structured language for querying databases, it is not a database
+
 - [ ] Why do tables need a `primary key`?
+
+to uniquely identify each resource on the table
 
 - [ ] What is the name given to a table column that references the primary key on another table.
 
+foriegn key
+
 - [ ] What do we need in order to have a _many to many_ relationship between two tables.
+
+a table 'between' the two that has a foriegn key that references both.
+
 
 ## Minimum Viable Product
 
