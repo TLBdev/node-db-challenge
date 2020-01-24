@@ -25,6 +25,33 @@ router.get('/:id', (req, res) => {
         resources: []
     }
     let resourcesArr = []
+
+    db('project_resource').where('project_id', req.params.id)
+        .then(reso => {
+            resourcesArr = reso
+
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500).json({ message: 'Failed to get Projects' });
+
+        });
+    for (let i = 0; i < resourcesArr.length; i++) {
+        db('resources').where('id', resourcesArr[i].resource_id)
+            .then(result => {
+                console.log('in for', result)
+                payload.resources.push(result)
+                if (i === resourcesArr.length - 2) {
+
+                }
+            })
+            .catch(err => {
+                console.log(err)
+                res.status(500).json({ message: 'Failed to get Projects' });
+
+            });
+    }
+
     db('projects').where('projects.id', req.params.id)
         .then(Projects => {
             payload.id = Projects[0].id
@@ -41,6 +68,7 @@ router.get('/:id', (req, res) => {
     db('tasks').where('project_id', req.params.id)
         .then(tasks => {
             payload.tasks = tasks
+            res.json(payload)
 
         })
         .catch(err => {
@@ -48,16 +76,7 @@ router.get('/:id', (req, res) => {
             res.status(500).json({ message: 'Failed to get Projects' });
 
         });
-    db('project_resource')//.where('project_id', req.params.id)
-        .then(reso => {
-            console.log(reso)
-            res.json(reso)
-        })
-        .catch(err => {
-            console.log(err)
-            res.status(500).json({ message: 'Failed to get Projects' });
 
-        });
 
 });
 
@@ -114,6 +133,7 @@ router.post('/', (req, res) => {
     Projects.add(projectData)
         .then(project => {
             res.status(201).json(project);
+
         })
         .catch(err => {
             res.status(500).json({ message: 'Failed to create new scheme' });
