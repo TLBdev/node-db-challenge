@@ -15,70 +15,59 @@ router.get('/', (req, res) => {
         });
 });
 
-router.get('/:id', (req, res) => {
-    let payload = {
-        id: 0,
-        name: '  ',
-        description: '  ',
-        completed: false,
-        tasks: [],
-        resources: []
-    }
-    let resourcesArr = []
-
-    db('project_resource').where('project_id', req.params.id)
-        .then(reso => {
-            resourcesArr = reso
-
-        })
-        .catch(err => {
-            console.log(err)
-            res.status(500).json({ message: 'Failed to get Projects' });
-
-        });
-    for (let i = 0; i < resourcesArr.length; i++) {
-        db('resources').where('id', resourcesArr[i].resource_id)
-            .then(result => {
-                console.log('in for', result)
-                payload.resources.push(result)
-                if (i === resourcesArr.length - 2) {
-
-                }
-            })
-            .catch(err => {
-                console.log(err)
-                res.status(500).json({ message: 'Failed to get Projects' });
-
-            });
-    }
-
-    db('projects').where('projects.id', req.params.id)
-        .then(Projects => {
-            payload.id = Projects[0].id
-            payload.name = Projects[0].project_name
-            payload.description = Projects[0].description
-            payload.completed = Projects[0].completed ? true : false
-
-        })
-        .catch(err => {
-            console.log(err)
-            res.status(500).json({ message: 'Failed to get Projects' });
-
-        });
-    db('tasks').where('project_id', req.params.id)
-        .then(tasks => {
-            payload.tasks = tasks
-            res.json(payload)
-
-        })
-        .catch(err => {
-            console.log(err)
-            res.status(500).json({ message: 'Failed to get Projects' });
-
-        });
+// router.get('/:id', (req, res) => {
+//     let payload = {
+//         id: 0,
+//         name: '  ',
+//         description: '  ',
+//         completed: false,
+//         tasks: [],
+//         resources: []
+//     }
 
 
-});
+//     db('project_resource')
+//         .join('resources', 'project_resource.id', 'resources.id')
+//         .join('projects', 'project_resource.project_id', 'projects.id')
+//         .where('project_resource.project_id', req.params.id)
+//         .select('resources.resource_name')
+//         .then(reso => {
+//             console.log(reso)
+//             payload.resources = reso
+//         })
+//         .catch(err => {
+//             console.log(err)
+//             res.status(500).json({ message: 'Failed to get Projects' });
+
+//         });
+
+//     db('projects').where('projects.id', req.params.id)
+//         .then(Projects => {
+//             payload.id = Projects[0].id
+//             payload.name = Projects[0].project_name
+//             payload.description = Projects[0].description
+//             payload.completed = Projects[0].completed ? true : false
+
+//         })
+//         .catch(err => {
+//             console.log(err)
+//             res.status(500).json({ message: 'Failed to get Projects' });
+
+//         });
+//     db('tasks').where('project_id', req.params.id)
+//         .then(tasks => {
+//             payload.tasks = tasks
+//             res.json(payload)
+
+//         })
+//         .catch(err => {
+//             console.log(err)
+//             res.status(500).json({ message: 'Failed to get Projects' });
+
+//         });
+
+
+// });
 
 router.get('/tasks', (req, res) => {
     Projects.findTask()
